@@ -14,8 +14,8 @@ class MarkerManager {
         this.config = config;
         this.markerCluster = null;
         this.map = null;
-        this.latCol = config.map.latitudeColumn || 'latitude';
-        this.lngCol = config.map.longitudeColumn || 'longitude';
+        this.latCol = config.database.latitudeColumn || 'latitude';
+        this.lngCol = config.database.longitudeColumn || 'longitude';
         this.color = config.map.markerColor || '#e74c3c';
         this.idCol = config.database.primaryKey || 'id';
     }
