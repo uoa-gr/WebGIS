@@ -9,7 +9,7 @@ import { renderDisplayConfig, getDisplayConfig } from './steps/display-config.js
 import { generateConfig } from './generators/config-generator.js';
 import { generateSetupSQL } from './generators/sql-generator.js';
 import { generateDataSQL } from './generators/data-generator.js';
-import { testConnection, insertData, getSqlEditorLink } from './steps/supabase-setup.js';
+import { createSchema, testConnection, insertData } from './steps/supabase-setup.js';
 import { downloadZip } from './generators/zip-exporter.js';
 
 const TOTAL_STEPS = 8;
@@ -88,49 +88,41 @@ function showPreview() {
 
 /* ── Step 7: Supabase Setup ───────────────────── */
 
+let schemaCreated = false;
+
 function initSupabaseStep() {
+    // Reset insert button state based on schema status
+    document.getElementById('btn-sb-insert').disabled = !schemaCreated;
+}
+
+document.getElementById('btn-sb-create').addEventListener('click', async () => {
+    const url = document.getElementById('sb-url').value.trim();
+    const token = document.getElementById('sb-access-token').value.trim();
     const columns = getColumnConfig();
     const filters = getFilterConfig();
     const project = getProjectInfo();
     const sql = generateSetupSQL({ columns, filters, tableName: project.tableName });
 
-    // Show the SQL preview
-    document.getElementById('sql-preview').textContent = sql;
-
-    // Update the SQL Editor link if a URL is already entered
-    const urlInput = document.getElementById('sb-url');
-    updateSqlEditorLink(urlInput.value);
-    urlInput.addEventListener('input', () => updateSqlEditorLink(urlInput.value));
-}
-
-function updateSqlEditorLink(url) {
-    const link = document.getElementById('sql-editor-link');
-    if (url && url.includes('.supabase.co')) {
-        link.href = getSqlEditorLink(url);
-    } else {
-        link.href = 'https://supabase.com/dashboard';
+    if (!url || !token) {
+        showStatus('Enter your Project URL and Access Token.', 'error');
+        return;
     }
-}
 
-document.getElementById('btn-copy-sql').addEventListener('click', () => {
-    const sql = document.getElementById('sql-preview').textContent;
-    navigator.clipboard.writeText(sql).then(() => {
-        const btn = document.getElementById('btn-copy-sql');
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
-    });
-});
+    const btn = document.getElementById('btn-sb-create');
+    btn.disabled = true;
+    btn.textContent = 'Creating...';
+    showStatus('Creating database schema...');
 
-document.getElementById('btn-sb-test').addEventListener('click', async () => {
-    const url = document.getElementById('sb-url').value.trim();
-    const key = document.getElementById('sb-anon-key').value.trim();
-    const project = getProjectInfo();
-
-    showStatus('Testing connection...');
-    const result = await testConnection(url, key, project.tableName);
+    const result = await createSchema({ supabaseUrl: url, accessToken: token, sql });
     showStatus(result.message, result.ok ? 'success' : 'error');
 
-    document.getElementById('btn-sb-insert').disabled = !result.ok;
+    btn.disabled = false;
+    btn.textContent = 'Create Database';
+
+    if (result.ok) {
+        schemaCreated = true;
+        document.getElementById('btn-sb-insert').disabled = false;
+    }
 });
 
 document.getElementById('btn-sb-insert').addEventListener('click', async () => {
@@ -138,6 +130,11 @@ document.getElementById('btn-sb-insert').addEventListener('click', async () => {
     const key = document.getElementById('sb-anon-key').value.trim();
     const columns = getColumnConfig();
     const project = getProjectInfo();
+
+    if (!url || !key) {
+        showStatus('Enter your Project URL and Anon Key.', 'error');
+        return;
+    }
 
     document.getElementById('btn-sb-insert').disabled = true;
     showStatus('Inserting data...');

@@ -1,12 +1,37 @@
 /**
- * supabase-setup.js — Handles Supabase connection testing and automatic data insertion.
+ * supabase-setup.js — Handles automated Supabase database setup.
  *
- * Schema creation (CREATE TABLE, etc.) must be done via the Supabase SQL Editor.
- * The wizard generates the SQL and gives the user a copy-paste experience.
- * Data insertion is then handled automatically via the Supabase JS client.
+ * Schema creation (DDL) goes through our Vercel serverless function at /api/setup-database,
+ * which proxies the request to the Supabase Management API.
+ * Data insertion uses the Supabase JS client with the anon key.
  */
 
 let client = null;
+
+/**
+ * Create the database schema (table, RPC functions, RLS, indexes) via the Vercel API.
+ */
+export async function createSchema({ supabaseUrl, accessToken, sql }) {
+    if (!supabaseUrl || !accessToken || !sql) {
+        return { ok: false, message: 'Enter URL, access token, and ensure SQL was generated.' };
+    }
+
+    try {
+        const resp = await fetch('/api/setup-database', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ supabaseUrl, accessToken, sql })
+        });
+
+        const data = await resp.json();
+        if (!data.ok) {
+            return { ok: false, message: data.error || 'Schema creation failed.' };
+        }
+        return { ok: true, message: 'Database schema created successfully.' };
+    } catch (err) {
+        return { ok: false, message: `Request failed: ${err.message}` };
+    }
+}
 
 /**
  * Test that the Supabase credentials work and the table exists.
@@ -14,28 +39,24 @@ let client = null;
 export async function testConnection(url, anonKey, tableName) {
     try {
         if (!url || !anonKey) return { ok: false, message: 'Enter both URL and anon key.' };
-        if (!url.includes('.supabase.co')) return { ok: false, message: 'URL should look like https://xxxxx.supabase.co' };
 
         client = window.supabase.createClient(url, anonKey);
-
-        // Try selecting from the table to confirm it exists
         const { error } = await client.from(tableName).select('*').limit(1);
+
         if (error) {
             if (error.message.includes('does not exist') || error.code === '42P01') {
-                return { ok: false, message: `Table "${tableName}" not found. Run the setup SQL first.`, tableExists: false };
+                return { ok: false, message: `Table "${tableName}" not found.`, tableExists: false };
             }
             return { ok: false, message: `Connection error: ${error.message}` };
         }
-        return { ok: true, message: `Connected. Table "${tableName}" found.`, tableExists: true };
+        return { ok: true, message: `Connected. Table "${tableName}" exists.`, tableExists: true };
     } catch (err) {
         return { ok: false, message: `Connection failed: ${err.message}` };
     }
 }
 
 /**
- * Insert all CSV rows into the Supabase table.
- * Expects the table to already exist (created via the SQL Editor).
- * The setup SQL includes an INSERT RLS policy so the anon key can write.
+ * Insert all CSV rows into the Supabase table via the JS client.
  */
 export async function insertData({ url, anonKey, tableName, columns, rows }, onStatus) {
     if (!client) {
@@ -59,7 +80,6 @@ export async function insertData({ url, anonKey, tableName, columns, rows }, onS
             const cleanBatch = batch.map(row => {
                 const clean = {};
                 for (const col of columns) {
-                    // Skip auto-generated primary key
                     if (pk && col.name === pk.name) continue;
 
                     let val = row[col.name];
@@ -91,25 +111,8 @@ export async function insertData({ url, anonKey, tableName, columns, rows }, onS
 
         log(`All ${rows.length} rows inserted successfully.`, 'success');
         return { ok: true, inserted };
-
     } catch (err) {
         log(`Unexpected error: ${err.message}`, 'error');
         return { ok: false, inserted };
     }
-}
-
-/**
- * Extract the project ref from a Supabase URL for linking to the dashboard.
- */
-export function getProjectRef(url) {
-    const match = url.match(/https:\/\/([^.]+)\.supabase\.co/);
-    return match ? match[1] : null;
-}
-
-/**
- * Get a direct link to the Supabase SQL Editor for the given project.
- */
-export function getSqlEditorLink(url) {
-    const ref = getProjectRef(url);
-    return ref ? `https://supabase.com/dashboard/project/${ref}/sql/new` : 'https://supabase.com/dashboard';
 }
