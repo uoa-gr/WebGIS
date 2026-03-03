@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS — Setup Wizard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="wizard-styles.css">
+</head>
+
+<body>
+
+    <div class="wizard-container">
+        <header class="wizard-header">
+            <h1>WebGIS Setup Wizard</h1>
+            <p class="wizard-subtitle">Create your WebGIS site in a few steps — no coding required.</p>
+        </header>
+
+        <!-- Progress bar -->
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="step active" data-step="1"><span class="step-num">1</span><span
+                        class="step-label">Upload</span></div>
+                <div class="step" data-step="2"><span class="step-num">2</span><span class="step-label">Columns</span>
+                </div>
+                <div class="step" data-step="3"><span class="step-num">3</span><span class="step-label">Filters</span>
+                </div>
+                <div class="step" data-step="4"><span class="step-num">4</span><span class="step-label">Display</span>
+                </div>
+                <div class="step" data-step="5"><span class="step-num">5</span><span class="step-label">Map</span></div>
+                <div class="step" data-step="6"><span class="step-num">6</span><span class="step-label">Project</span>
+                </div>
+                <div class="step" data-step="7"><span class="step-num">7</span><span class="step-label">Export</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: CSV Upload -->
+        <section class="wizard-step active" id="step-1">
+            <h2>Upload Your Data</h2>
+            <p>Upload a CSV file with your geographic data. The wizard will detect columns automatically.</p>
+            <div class="upload-zone" id="upload-zone">
+                <div class="upload-icon">📂</div>
+                <p>Drag & drop a CSV file here, or <label for="csv-file" class="upload-link">browse</label></p>
+                <input type="file" id="csv-file" accept=".csv" hidden>
+                <p class="upload-hint">Max file size: 50 MB</p>
+            </div>
+            <div id="upload-preview" class="upload-preview" style="display:none">
+                <h3>Preview</h3>
+                <div id="preview-table-wrapper" class="table-wrapper"></div>
+                <p id="upload-stats" class="upload-stats"></p>
+            </div>
+        </section>
+
+        <!-- Step 2: Column Configuration -->
+        <section class="wizard-step" id="step-2">
+            <h2>Configure Columns</h2>
+            <p>Set data types and mark which columns are latitude / longitude / primary key.</p>
+            <div id="columns-table-wrapper" class="table-wrapper"></div>
+        </section>
+
+        <!-- Step 3: Filters -->
+        <section class="wizard-step" id="step-3">
+            <h2>Choose Filters</h2>
+            <p>Select which columns appear as sidebar filters. Users will be able to narrow data by these.</p>
+            <div id="filters-config" class="checklist"></div>
+        </section>
+
+        <!-- Step 4: Display (tooltip + detail modal) -->
+        <section class="wizard-step" id="step-4">
+            <h2>Display Settings</h2>
+            <p>Pick tooltip fields (shown on marker hover) and detail modal fields (shown on marker click).</p>
+            <div class="display-split">
+                <div>
+                    <h3>Tooltip Fields</h3>
+                    <div id="tooltip-config" class="checklist"></div>
+                </div>
+                <div>
+                    <h3>Detail Modal Fields</h3>
+                    <div id="modal-config" class="checklist"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 5: Map Settings -->
+        <section class="wizard-step" id="step-5">
+            <h2>Map Settings</h2>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>Center Latitude</label>
+                    <input type="number" id="map-lat" value="38.5" step="any">
+                </div>
+                <div class="form-field">
+                    <label>Center Longitude</label>
+                    <input type="number" id="map-lng" value="23.7" step="any">
+                </div>
+                <div class="form-field">
+                    <label>Default Zoom</label>
+                    <input type="number" id="map-zoom" value="7" min="1" max="18">
+                </div>
+                <div class="form-field">
+                    <label>Marker Color</label>
+                    <input type="color" id="map-color" value="#e74c3c">
+                </div>
+            </div>
+            <div id="map-preview" class="map-preview"></div>
+        </section>
+
+        <!-- Step 6: Project Info -->
+        <section class="wizard-step" id="step-6">
+            <h2>Project Information</h2>
+            <div class="form-grid">
+                <div class="form-field full">
+                    <label>Project Title *</label>
+                    <input type="text" id="proj-title" placeholder="e.g. Historic Floods of Greece">
+                </div>
+                <div class="form-field full">
+                    <label>Subtitle</label>
+                    <input type="text" id="proj-subtitle" placeholder="e.g. A database of historic flood events">
+                </div>
+                <div class="form-field">
+                    <label>Table Name *</label>
+                    <input type="text" id="proj-table" placeholder="e.g. floods">
+                    <small>Lowercase, no spaces. Used in Supabase.</small>
+                </div>
+                <div class="form-field">
+                    <label>Unit Name</label>
+                    <input type="text" id="proj-unit" placeholder="e.g. floods, beachrocks, sites">
+                </div>
+                <div class="form-field full">
+                    <label>Contact Email</label>
+                    <input type="email" id="proj-email" placeholder="you@university.edu">
+                </div>
+                <div class="form-field full">
+                    <label>Institution</label>
+                    <input type="text" id="proj-institution" placeholder="University name">
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 7: Export -->
+        <section class="wizard-step" id="step-7">
+            <h2>Export Your WebGIS</h2>
+            <p>Download everything you need to deploy your site.</p>
+            <div class="export-cards">
+                <div class="export-card">
+                    <h3>1. Configuration</h3>
+                    <p>The JSON config file that drives your WebGIS app.</p>
+                    <button id="btn-export-config" class="btn btn-primary">Download webgis.config.json</button>
+                </div>
+                <div class="export-card">
+                    <h3>2. SQL Script</h3>
+                    <p>Run this in Supabase SQL Editor to create your table, RPC functions, RLS policies and indexes.
+                    </p>
+                    <button id="btn-export-sql" class="btn btn-primary">Download setup.sql</button>
+                </div>
+                <div class="export-card">
+                    <h3>3. Data SQL</h3>
+                    <p>INSERT statements for your CSV data.</p>
+                    <button id="btn-export-data" class="btn btn-primary">Download data.sql</button>
+                </div>
+            </div>
+            <div class="deploy-instructions">
+                <h3>How to Deploy</h3>
+                <ol>
+                    <li>Create a <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a> project
+                        (free tier is fine).</li>
+                    <li>Go to <strong>SQL Editor</strong> and run <code>setup.sql</code>, then <code>data.sql</code>.
+                    </li>
+                    <li>Copy your project URL and anon key from <strong>Settings → API</strong>.</li>
+                    <li>Open <code>webgis.config.json</code>, paste the URL and key in the <code>supabase</code>
+                        section.</li>
+                    <li>Put all files from the <code>app/</code> folder + <code>webgis.config.json</code> in a GitHub
+                        repository.</li>
+                    <li>Enable GitHub Pages (Settings → Pages → Source: main branch).</li>
+                    <li>Your WebGIS site is live!</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="wizard-nav">
+            <button id="btn-prev" class="btn btn-secondary" disabled>← Back</button>
+            <button id="btn-next" class="btn btn-primary">Next →</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/wizard-main.js"></script>
+</body>
+
+</html>

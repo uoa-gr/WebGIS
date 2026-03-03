@@ -1,0 +1,85 @@
+{
+    "version": "1.0",
+    "project": {
+        "title": "Historic Floods of Greece",
+        "shortTitle": "Floods",
+        "description": "A database of historic flood events across Greece.",
+        "citation": "",
+        "contactEmail": "example@university.edu",
+        "institution": "University of Athens",
+        "unit": "floods"
+    },
+    "supabase": {
+        "url": "YOUR_SUPABASE_URL",
+        "anonKey": "YOUR_SUPABASE_ANON_KEY"
+    },
+    "database": {
+        "tableName": "floods",
+        "primaryKey": "id",
+        "latitudeColumn": "latitude",
+        "longitudeColumn": "longitude",
+        "columns": [
+            { "name": "id", "type": "integer", "role": [] },
+            { "name": "flood_date", "type": "text", "role": ["filter", "search"] },
+            { "name": "location", "type": "text", "role": ["filter", "search"] },
+            { "name": "region", "type": "text", "role": ["filter", "search"] },
+            { "name": "cause", "type": "text", "role": ["filter"] },
+            { "name": "severity", "type": "text", "role": ["filter"] },
+            { "name": "casualties", "type": "integer", "role": [] },
+            { "name": "latitude", "type": "numeric", "role": [] },
+            { "name": "longitude", "type": "numeric", "role": [] },
+            { "name": "description", "type": "text", "role": ["search"] },
+            { "name": "source", "type": "text", "role": [] }
+        ]
+    },
+    "filters": [
+        { "column": "region", "label": "Region", "placeholder": "All Regions" },
+        { "column": "location", "label": "Location", "placeholder": "All Locations" },
+        { "column": "cause", "label": "Cause", "placeholder": "All Causes" },
+        { "column": "severity", "label": "Severity", "placeholder": "All Severities" },
+        { "column": "flood_date", "label": "Date", "placeholder": "All Dates" }
+    ],
+    "tooltip": [
+        { "column": "location", "label": "Location" },
+        { "column": "flood_date", "label": "Date" },
+        { "column": "severity", "label": "Severity" }
+    ],
+    "detailModal": [
+        { "column": "location", "label": "Location" },
+        { "column": "region", "label": "Region" },
+        { "column": "flood_date", "label": "Date" },
+        { "column": "cause", "label": "Cause" },
+        { "column": "severity", "label": "Severity" },
+        { "column": "casualties", "label": "Casualties" },
+        { "column": "description", "label": "Description" },
+        { "column": "source", "label": "Source", "type": "link" },
+        { "column": "latitude", "label": "Latitude", "type": "coordinates" },
+        { "column": "longitude", "label": "Longitude", "type": "coordinates" }
+    ],
+    "statistics": [
+        { "column": "id", "type": "count", "label": "Total Floods" },
+        { "column": "region", "type": "unique", "label": "Regions" },
+        { "column": "location", "type": "unique", "label": "Locations" },
+        { "column": "cause", "type": "unique", "label": "Causes" }
+    ],
+    "map": {
+        "center": [38.5, 23.7],
+        "zoom": 7,
+        "minZoom": 2,
+        "maxZoom": 18,
+        "markerColor": "#e74c3c",
+        "defaultBaseLayer": "OpenStreetMap"
+    },
+    "search": {
+        "columns": ["location", "region", "description", "cause"],
+        "displayColumns": ["location", "region", "flood_date"]
+    },
+    "features": {
+        "measurementTool": true,
+        "queryBuilder": true,
+        "globalSearch": true,
+        "submitData": true,
+        "reportBug": true,
+        "submitSuggestion": true
+    }
+}

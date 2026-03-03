@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="header-left">
+            <button id="sidebar-toggle" class="hamburger" aria-label="Toggle sidebar">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="header-titles">
+                <h1 id="header-title">WebGIS</h1>
+                <p id="header-subtitle"></p>
+            </div>
+        </div>
+        <div class="header-center">
+            <div class="search-wrapper">
+                <input type="text" id="search-input" placeholder="Search…" autocomplete="off">
+                <ul id="search-results" class="search-results"></ul>
+            </div>
+        </div>
+        <div class="header-right">
+            <div id="loading-indicator" class="loading-spinner"></div>
+        </div>
+    </header>
+
+    <!-- Active filter chips -->
+    <div id="filter-display" class="filter-display"></div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-tabs">
+            <button class="sidebar-tab active" data-tab="filters">Filters</button>
+            <button class="sidebar-tab" data-tab="stats">Statistics</button>
+            <button class="sidebar-tab" data-tab="tools">Tools</button>
+        </div>
+
+        <!-- Filters panel -->
+        <div id="panel-filters" class="tab-panel active">
+            <div id="filters-container" class="filters-container"></div>
+            <div class="sidebar-actions">
+                <button id="btn-reset" class="btn btn-secondary">Reset Filters</button>
+            </div>
+            <div id="query-builder-panel" class="query-builder-panel"></div>
+        </div>
+
+        <!-- Stats panel -->
+        <div id="panel-stats" class="tab-panel">
+            <div id="stats-container" class="stats-container"></div>
+        </div>
+
+        <!-- Tools panel -->
+        <div id="panel-tools" class="tab-panel">
+            <div class="tool-group">
+                <h3>Measurement</h3>
+                <button id="btn-measure" class="btn btn-secondary">Measure Distance</button>
+                <button id="btn-clear-measure" class="btn btn-secondary">Clear Measurements</button>
+            </div>
+            <div class="tool-group">
+                <h3>Data</h3>
+                <button id="btn-download-csv" class="btn btn-secondary">Download CSV Template</button>
+                <button id="btn-submit-data" class="btn btn-secondary">Submit Data</button>
+            </div>
+            <div class="tool-group">
+                <h3>Feedback</h3>
+                <button id="btn-report-bug" class="btn btn-secondary">Report Bug</button>
+                <button id="btn-suggestion" class="btn btn-secondary">Suggest Feature</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Map -->
+    <div id="map" class="map"></div>
+
+    <!-- Status bar -->
+    <div id="status-bar" class="status-bar"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

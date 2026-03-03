@@ -1,0 +1,107 @@
+{
+    "version": "1.0",
+    "project": {
+        "title": "Tombolos Web Map",
+        "shortTitle": "Tombolos",
+        "description": "Database of tombolo formations in Greek Islands",
+        "contactEmail": "",
+        "institution": "",
+        "unit": "tombolos"
+    },
+    "supabase": {
+        "url": "YOUR_SUPABASE_URL",
+        "anonKey": "YOUR_SUPABASE_ANON_KEY"
+    },
+    "database": {
+        "tableName": "tombolos",
+        "primaryKey": "id",
+        "latitudeColumn": "latitude",
+        "longitudeColumn": "longitude",
+        "columns": [
+            { "name": "id", "type": "integer", "role": ["primary_key"] },
+            { "name": "name_en", "type": "text", "role": [] },
+            { "name": "name_gr", "type": "text", "role": [] },
+            { "name": "prefecture_en", "type": "text", "role": [] },
+            { "name": "island_en", "type": "text", "role": [] },
+            { "name": "tombolo_type", "type": "text", "role": [] },
+            { "name": "tombolo_category", "type": "text", "role": [] },
+            { "name": "latitude", "type": "numeric", "role": ["latitude"] },
+            { "name": "longitude", "type": "numeric", "role": ["longitude"] },
+            { "name": "length_m", "type": "numeric", "role": [] },
+            { "name": "width_tombolo_m", "type": "numeric", "role": [] },
+            { "name": "width_continent_m", "type": "numeric", "role": [] },
+            { "name": "width_island_m", "type": "numeric", "role": [] },
+            { "name": "height_m", "type": "numeric", "role": [] },
+            { "name": "elevation", "type": "numeric", "role": [] },
+            { "name": "submerged", "type": "text", "role": [] },
+            { "name": "sub_rcp26", "type": "text", "role": [] },
+            { "name": "sub_rcp85", "type": "text", "role": [] },
+            { "name": "elevation_rcp26", "type": "numeric", "role": [] },
+            { "name": "elevation_rcp85", "type": "numeric", "role": [] },
+            { "name": "reference", "type": "text", "role": [] }
+        ]
+    },
+    "filters": [
+        { "column": "prefecture_en", "label": "Prefecture", "placeholder": "All Prefectures" },
+        { "column": "island_en", "label": "Island", "placeholder": "All Islands" },
+        { "column": "tombolo_type", "label": "Type", "placeholder": "All Types" },
+        { "column": "tombolo_category", "label": "Category", "placeholder": "All Categories" },
+        { "column": "submerged", "label": "Submerged", "placeholder": "All" },
+        { "column": "sub_rcp26", "label": "RCP 2.6", "placeholder": "All" },
+        { "column": "sub_rcp85", "label": "RCP 8.5", "placeholder": "All" }
+    ],
+    "tooltip": [
+        { "column": "name_en", "label": "Name" },
+        { "column": "island_en", "label": "Island" },
+        { "column": "tombolo_type", "label": "Type" },
+        { "column": "submerged", "label": "Submerged" }
+    ],
+    "detailModal": [
+        { "column": "id", "label": "ID", "type": "text" },
+        { "column": "name_en", "label": "Name (EN)", "type": "text" },
+        { "column": "name_gr", "label": "Name (GR)", "type": "text" },
+        { "column": "prefecture_en", "label": "Prefecture", "type": "text" },
+        { "column": "island_en", "label": "Island", "type": "text" },
+        { "column": "tombolo_type", "label": "Type", "type": "text" },
+        { "column": "tombolo_category", "label": "Category", "type": "text" },
+        { "column": "latitude", "label": "Latitude", "type": "coordinates" },
+        { "column": "longitude", "label": "Longitude", "type": "coordinates" },
+        { "column": "length_m", "label": "Length (m)", "type": "text" },
+        { "column": "width_tombolo_m", "label": "Width Tombolo (m)", "type": "text" },
+        { "column": "width_continent_m", "label": "Width Continent (m)", "type": "text" },
+        { "column": "width_island_m", "label": "Width Island (m)", "type": "text" },
+        { "column": "height_m", "label": "Height (m)", "type": "text" },
+        { "column": "elevation", "label": "Elevation", "type": "text" },
+        { "column": "submerged", "label": "Submerged", "type": "text" },
+        { "column": "sub_rcp26", "label": "RCP 2.6", "type": "text" },
+        { "column": "sub_rcp85", "label": "RCP 8.5", "type": "text" },
+        { "column": "elevation_rcp26", "label": "Elevation RCP 2.6", "type": "text" },
+        { "column": "elevation_rcp85", "label": "Elevation RCP 8.5", "type": "text" },
+        { "column": "reference", "label": "Reference", "type": "link" }
+    ],
+    "statistics": [
+        { "column": "id", "type": "count", "label": "Total Tombolos" },
+        { "column": "island_en", "type": "unique", "label": "Islands" },
+        { "column": "tombolo_type", "type": "unique", "label": "Types" }
+    ],
+    "map": {
+        "center": [39.0742, 21.8243],
+        "zoom": 7,
+        "minZoom": 2,
+        "maxZoom": 18,
+        "markerColor": "#3498db",
+        "defaultBaseLayer": "OpenStreetMap"
+    },
+    "search": {
+        "columns": ["name_en", "name_gr", "prefecture_en", "island_en", "tombolo_type"],
+        "displayColumns": ["name_en", "island_en", "tombolo_type"]
+    },
+    "features": {
+        "measurementTool": true,
+        "queryBuilder": true,
+        "globalSearch": true,
+        "submitData": true,
+        "reportBug": true,
+        "submitSuggestion": true
+    }
+}

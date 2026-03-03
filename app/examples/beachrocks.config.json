@@ -1,0 +1,112 @@
+{
+    "version": "1.0",
+    "project": {
+        "title": "Beach Rocks Web Map",
+        "shortTitle": "BeachRocks",
+        "description": "Global database of beach rock formations",
+        "contactEmail": "",
+        "institution": "",
+        "unit": "beachrocks"
+    },
+    "supabase": {
+        "url": "YOUR_SUPABASE_URL",
+        "anonKey": "YOUR_SUPABASE_ANON_KEY"
+    },
+    "database": {
+        "tableName": "beachrocks",
+        "primaryKey": "id",
+        "latitudeColumn": "latitude",
+        "longitudeColumn": "longitude",
+        "columns": [
+            { "name": "id", "type": "integer", "role": ["primary_key"] },
+            { "name": "site", "type": "text", "role": [] },
+            { "name": "area", "type": "text", "role": [] },
+            { "name": "country", "type": "text", "role": [] },
+            { "name": "ocean_sea", "type": "text", "role": [] },
+            { "name": "latitude", "type": "numeric", "role": ["latitude"] },
+            { "name": "longitude", "type": "numeric", "role": ["longitude"] },
+            { "name": "pos_type", "type": "text", "role": [] },
+            { "name": "maximum_altitude", "type": "numeric", "role": [] },
+            { "name": "minimum_altitude", "type": "numeric", "role": [] },
+            { "name": "no_of_slabs", "type": "integer", "role": [] },
+            { "name": "tidal_range", "type": "numeric", "role": [] },
+            { "name": "dating_method", "type": "text", "role": [] },
+            { "name": "dated_sample", "type": "text", "role": [] },
+            { "name": "estimated_age", "type": "text", "role": [] },
+            { "name": "main_composition", "type": "text", "role": [] },
+            { "name": "cement_type", "type": "text", "role": [] },
+            { "name": "cement_microstructure", "type": "text", "role": [] },
+            { "name": "formation_process", "type": "text", "role": [] },
+            { "name": "formation_location", "type": "text", "role": [] },
+            { "name": "water_table", "type": "text", "role": [] },
+            { "name": "reference", "type": "text", "role": [] },
+            { "name": "publication_year", "type": "integer", "role": [] },
+            { "name": "dataset_reference", "type": "text", "role": [] }
+        ]
+    },
+    "filters": [
+        { "column": "country", "label": "Country", "placeholder": "All Countries" },
+        { "column": "ocean_sea", "label": "Ocean / Sea", "placeholder": "All Oceans/Seas" },
+        { "column": "cement_type", "label": "Cement Type", "placeholder": "All Cement Types" },
+        { "column": "formation_process", "label": "Formation Process", "placeholder": "All Processes" },
+        { "column": "formation_location", "label": "Formation Location", "placeholder": "All Locations" },
+        { "column": "dating_method", "label": "Dating Method", "placeholder": "All Methods" }
+    ],
+    "tooltip": [
+        { "column": "site", "label": "Site" },
+        { "column": "country", "label": "Country" },
+        { "column": "ocean_sea", "label": "Ocean/Sea" },
+        { "column": "cement_type", "label": "Cement Type" }
+    ],
+    "detailModal": [
+        { "column": "id", "label": "ID", "type": "text" },
+        { "column": "site", "label": "Site", "type": "text" },
+        { "column": "area", "label": "Area", "type": "text" },
+        { "column": "country", "label": "Country", "type": "text" },
+        { "column": "ocean_sea", "label": "Ocean/Sea", "type": "text" },
+        { "column": "latitude", "label": "Latitude", "type": "coordinates" },
+        { "column": "longitude", "label": "Longitude", "type": "coordinates" },
+        { "column": "pos_type", "label": "Position Type", "type": "text" },
+        { "column": "maximum_altitude", "label": "Max Altitude", "type": "text" },
+        { "column": "minimum_altitude", "label": "Min Altitude", "type": "text" },
+        { "column": "no_of_slabs", "label": "No. of Slabs", "type": "text" },
+        { "column": "tidal_range", "label": "Tidal Range", "type": "text" },
+        { "column": "dating_method", "label": "Dating Method", "type": "text" },
+        { "column": "dated_sample", "label": "Dated Sample", "type": "text" },
+        { "column": "estimated_age", "label": "Estimated Age", "type": "text" },
+        { "column": "main_composition", "label": "Main Composition", "type": "text" },
+        { "column": "cement_type", "label": "Cement Type", "type": "text" },
+        { "column": "cement_microstructure", "label": "Cement Microstructure", "type": "text" },
+        { "column": "formation_process", "label": "Formation Process", "type": "text" },
+        { "column": "formation_location", "label": "Formation Location", "type": "text" },
+        { "column": "water_table", "label": "Water Table", "type": "text" },
+        { "column": "reference", "label": "Reference", "type": "text" },
+        { "column": "publication_year", "label": "Publication Year", "type": "text" },
+        { "column": "dataset_reference", "label": "Dataset Reference", "type": "link" }
+    ],
+    "statistics": [
+        { "column": "id", "type": "count", "label": "Total Beachrocks" },
+        { "column": "country", "type": "unique", "label": "Countries" },
+        { "column": "ocean_sea", "type": "unique", "label": "Oceans/Seas" }
+    ],
+    "map": {
+        "center": [25, 0],
+        "zoom": 2,
+        "minZoom": 2,
+        "maxZoom": 18,
+        "markerColor": "#e74c3c",
+        "defaultBaseLayer": "OpenStreetMap"
+    },
+    "search": {
+        "columns": ["site", "area", "country", "ocean_sea", "cement_type", "formation_process"],
+        "displayColumns": ["site", "country", "ocean_sea"]
+    },
+    "features": {
+        "measurementTool": true,
+        "queryBuilder": true,
+        "globalSearch": true,
+        "submitData": true,
+        "reportBug": true,
+        "submitSuggestion": true
+    }
+}
