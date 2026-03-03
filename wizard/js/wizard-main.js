@@ -9,10 +9,13 @@ import { renderDisplayConfig, getDisplayConfig } from './steps/display-config.js
 import { generateConfig } from './generators/config-generator.js';
 import { generateSetupSQL } from './generators/sql-generator.js';
 import { generateDataSQL } from './generators/data-generator.js';
+import { testConnection, insertData, getSqlEditorLink } from './steps/supabase-setup.js';
+import { downloadZip } from './generators/zip-exporter.js';
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 8;
 let currentStep = 1;
 let csvData = { headers: [], rows: [], raw: '' };
+let dataInserted = false;
 
 /* ── Navigation ─────────────────────────────── */
 
@@ -43,6 +46,7 @@ function goStep(n) {
     if (n === 2) renderColumnConfig(csvData.headers, document.getElementById('columns-table-wrapper'));
     if (n === 3) renderFilterConfig(getColumnConfig(), document.getElementById('filters-config'));
     if (n === 4) renderDisplayConfig(getColumnConfig(), document.getElementById('tooltip-config'), document.getElementById('modal-config'));
+    if (n === 7) initSupabaseStep();
 }
 
 /* ── Step 1: CSV Upload ──────────────────────── */
@@ -82,15 +86,115 @@ function showPreview() {
     document.getElementById('upload-preview').style.display = 'block';
 }
 
-/* ── Step 7: Export buttons ───────────────────── */
+/* ── Step 7: Supabase Setup ───────────────────── */
 
-document.getElementById('btn-export-config').addEventListener('click', () => {
+function initSupabaseStep() {
+    const columns = getColumnConfig();
+    const filters = getFilterConfig();
+    const project = getProjectInfo();
+    const sql = generateSetupSQL({ columns, filters, tableName: project.tableName });
+
+    // Show the SQL preview
+    document.getElementById('sql-preview').textContent = sql;
+
+    // Update the SQL Editor link if a URL is already entered
+    const urlInput = document.getElementById('sb-url');
+    updateSqlEditorLink(urlInput.value);
+    urlInput.addEventListener('input', () => updateSqlEditorLink(urlInput.value));
+}
+
+function updateSqlEditorLink(url) {
+    const link = document.getElementById('sql-editor-link');
+    if (url && url.includes('.supabase.co')) {
+        link.href = getSqlEditorLink(url);
+    } else {
+        link.href = 'https://supabase.com/dashboard';
+    }
+}
+
+document.getElementById('btn-copy-sql').addEventListener('click', () => {
+    const sql = document.getElementById('sql-preview').textContent;
+    navigator.clipboard.writeText(sql).then(() => {
+        const btn = document.getElementById('btn-copy-sql');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
+    });
+});
+
+document.getElementById('btn-sb-test').addEventListener('click', async () => {
+    const url = document.getElementById('sb-url').value.trim();
+    const key = document.getElementById('sb-anon-key').value.trim();
+    const project = getProjectInfo();
+
+    showStatus('Testing connection...');
+    const result = await testConnection(url, key, project.tableName);
+    showStatus(result.message, result.ok ? 'success' : 'error');
+
+    document.getElementById('btn-sb-insert').disabled = !result.ok;
+});
+
+document.getElementById('btn-sb-insert').addEventListener('click', async () => {
+    const url = document.getElementById('sb-url').value.trim();
+    const key = document.getElementById('sb-anon-key').value.trim();
+    const columns = getColumnConfig();
+    const project = getProjectInfo();
+
+    document.getElementById('btn-sb-insert').disabled = true;
+    showStatus('Inserting data...');
+
+    const result = await insertData(
+        { url, anonKey: key, tableName: project.tableName, columns, rows: csvData.rows },
+        ({ message, type }) => showStatus(message, type)
+    );
+
+    dataInserted = result.ok;
+    if (result.ok) {
+        showStatus(`Done! ${result.inserted} rows inserted.`, 'success');
+    }
+});
+
+function showStatus(msg, type = 'info') {
+    const container = document.getElementById('sb-status');
+    const log = document.getElementById('sb-log');
+    container.style.display = 'block';
+    const entry = document.createElement('div');
+    entry.className = `sb-log-entry sb-${type}`;
+    entry.textContent = msg;
+    log.appendChild(entry);
+    log.scrollTop = log.scrollHeight;
+}
+
+/* ── Step 8: Download ─────────────────────────── */
+
+function buildConfig() {
     const columns = getColumnConfig();
     const filters = getFilterConfig();
     const display = getDisplayConfig();
     const project = getProjectInfo();
     const mapSettings = getMapSettings();
-    const config = generateConfig({ columns, filters, display, project, mapSettings });
+    const supabaseUrl = document.getElementById('sb-url').value.trim();
+    const supabaseAnonKey = document.getElementById('sb-anon-key').value.trim();
+    return generateConfig({ columns, filters, display, project, mapSettings, supabaseUrl, supabaseAnonKey });
+}
+
+document.getElementById('btn-download-zip').addEventListener('click', async () => {
+    const config = buildConfig();
+    const project = getProjectInfo();
+
+    const btn = document.getElementById('btn-download-zip');
+    btn.disabled = true;
+    btn.textContent = 'Building ZIP...';
+    try {
+        await downloadZip(config, project.title);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Download ZIP';
+    }
+});
+
+// Individual file exports (advanced)
+document.getElementById('btn-export-config').addEventListener('click', () => {
+    const config = buildConfig();
     download('webgis.config.json', JSON.stringify(config, null, 4));
 });
 

@@ -2,7 +2,7 @@
  * config-generator.js — Produces the webgis.config.json from wizard state.
  */
 
-export function generateConfig({ columns, filters, display, project, mapSettings }) {
+export function generateConfig({ columns, filters, display, project, mapSettings, supabaseUrl, supabaseAnonKey }) {
     const latCol = columns.find(c => c.role === 'latitude')?.name || 'latitude';
     const lngCol = columns.find(c => c.role === 'longitude')?.name || 'longitude';
     const pkCol = columns.find(c => c.role === 'primary_key')?.name || 'id';
@@ -18,8 +18,8 @@ export function generateConfig({ columns, filters, display, project, mapSettings
             unit: project.unit
         },
         supabase: {
-            url: 'YOUR_SUPABASE_URL',
-            anonKey: 'YOUR_SUPABASE_ANON_KEY'
+            url: supabaseUrl || 'YOUR_SUPABASE_URL',
+            anonKey: supabaseAnonKey || 'YOUR_SUPABASE_ANON_KEY'
         },
         database: {
             tableName: project.tableName,

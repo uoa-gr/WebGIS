@@ -24,7 +24,8 @@ export function generateSetupSQL({ columns, filters, tableName }) {
 
     // ── RLS ──
     sql += `ALTER TABLE ${ident(tableName)} ENABLE ROW LEVEL SECURITY;\n`;
-    sql += `CREATE POLICY "Allow public read" ON ${ident(tableName)} FOR SELECT USING (true);\n\n`;
+    sql += `CREATE POLICY "Allow public read" ON ${ident(tableName)} FOR SELECT USING (true);\n`;
+    sql += `CREATE POLICY "Allow public insert" ON ${ident(tableName)} FOR INSERT WITH CHECK (true);\n\n`;
 
     // ── Indexes ──
     sql += `CREATE INDEX IF NOT EXISTS idx_${tableName}_coords ON ${ident(tableName)} (${ident(latCol)}, ${ident(lngCol)});\n`;

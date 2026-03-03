@@ -33,7 +33,9 @@
                 <div class="step" data-step="5"><span class="step-num">5</span><span class="step-label">Map</span></div>
                 <div class="step" data-step="6"><span class="step-num">6</span><span class="step-label">Project</span>
                 </div>
-                <div class="step" data-step="7"><span class="step-num">7</span><span class="step-label">Export</span>
+                <div class="step" data-step="7"><span class="step-num">7</span><span class="step-label">Supabase</span>
+                </div>
+                <div class="step" data-step="8"><span class="step-num">8</span><span class="step-label">Download</span>
                 </div>
             </div>
         </div>
@@ -141,44 +143,98 @@
             </div>
         </section>
 
-        <!-- Step 7: Export -->
+        <!-- Step 7: Supabase Setup -->
         <section class="wizard-step" id="step-7">
-            <h2>Export Your WebGIS</h2>
-            <p>Download everything you need to deploy your site.</p>
-            <div class="export-cards">
-                <div class="export-card">
-                    <h3>1. Configuration</h3>
-                    <p>The JSON config file that drives your WebGIS app.</p>
-                    <button id="btn-export-config" class="btn btn-primary">Download webgis.config.json</button>
+            <h2>Set Up Your Database</h2>
+
+            <!-- Phase A: Create the schema -->
+            <div id="sb-phase-a">
+                <div class="supabase-instructions">
+                    <h3>Step 1: Create a Supabase project</h3>
+                    <ol>
+                        <li>Go to <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a> and sign up (free).</li>
+                        <li>Click <strong>New Project</strong>, pick a name and region, wait for it to be ready.</li>
+                    </ol>
                 </div>
-                <div class="export-card">
-                    <h3>2. SQL Script</h3>
-                    <p>Run this in Supabase SQL Editor to create your table, RPC functions, RLS policies and indexes.
-                    </p>
-                    <button id="btn-export-sql" class="btn btn-primary">Download setup.sql</button>
+
+                <div class="supabase-instructions">
+                    <h3>Step 2: Create your database table</h3>
+                    <p>Copy the SQL below and paste it into your Supabase SQL Editor. This creates the table and everything the app needs.</p>
+                    <div class="sql-block">
+                        <div class="sql-block-header">
+                            <span>Setup SQL</span>
+                            <button id="btn-copy-sql" class="btn btn-secondary btn-small">Copy to Clipboard</button>
+                        </div>
+                        <pre id="sql-preview" class="sql-preview"></pre>
+                    </div>
+                    <a id="sql-editor-link" href="https://supabase.com/dashboard" target="_blank" rel="noopener" class="btn btn-primary">
+                        Open Supabase SQL Editor →
+                    </a>
                 </div>
-                <div class="export-card">
-                    <h3>3. Data SQL</h3>
-                    <p>INSERT statements for your CSV data.</p>
-                    <button id="btn-export-data" class="btn btn-primary">Download data.sql</button>
+
+                <div class="supabase-instructions">
+                    <h3>Step 3: Enter your credentials</h3>
+                    <p>After running the SQL, go to <strong>Settings → API</strong> in Supabase and copy these two values:</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-field full">
+                        <label>Supabase Project URL *</label>
+                        <input type="url" id="sb-url" placeholder="https://your-project.supabase.co">
+                    </div>
+                    <div class="form-field full">
+                        <label>Supabase Anon Key *</label>
+                        <input type="text" id="sb-anon-key" placeholder="eyJhbGci...">
+                    </div>
+                </div>
+
+                <div class="supabase-actions">
+                    <button id="btn-sb-test" class="btn btn-secondary">Test Connection</button>
+                    <button id="btn-sb-insert" class="btn btn-primary" disabled>Insert Data Automatically</button>
                 </div>
             </div>
+
+            <!-- Phase B: Status log -->
+            <div id="sb-status" class="sb-status" style="display:none">
+                <div id="sb-log" class="sb-log"></div>
+            </div>
+        </section>
+
+        <!-- Step 8: Download -->
+        <section class="wizard-step" id="step-8">
+            <h2>Download Your WebGIS</h2>
+
+            <div class="download-main">
+                <p>Everything is ready. Download the complete app, push to GitHub, enable Pages — your site is live.</p>
+                <button id="btn-download-zip" class="btn btn-primary btn-large">Download ZIP</button>
+            </div>
+
             <div class="deploy-instructions">
-                <h3>How to Deploy</h3>
+                <h3>Deploy in 3 Steps</h3>
                 <ol>
-                    <li>Create a <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a> project
-                        (free tier is fine).</li>
-                    <li>Go to <strong>SQL Editor</strong> and run <code>setup.sql</code>, then <code>data.sql</code>.
-                    </li>
-                    <li>Copy your project URL and anon key from <strong>Settings → API</strong>.</li>
-                    <li>Open <code>webgis.config.json</code>, paste the URL and key in the <code>supabase</code>
-                        section.</li>
-                    <li>Put all files from the <code>app/</code> folder + <code>webgis.config.json</code> in a GitHub
-                        repository.</li>
-                    <li>Enable GitHub Pages (Settings → Pages → Source: main branch).</li>
-                    <li>Your WebGIS site is live!</li>
+                    <li>Unzip the downloaded file.</li>
+                    <li>Create a GitHub repository and push the contents.</li>
+                    <li>Go to <strong>Settings → Pages</strong>, set source to <strong>main branch</strong>. Your site is live!</li>
                 </ol>
             </div>
+
+            <details class="advanced-export">
+                <summary>Advanced: Download individual files</summary>
+                <div class="export-cards">
+                    <div class="export-card">
+                        <h3>webgis.config.json</h3>
+                        <button id="btn-export-config" class="btn btn-secondary">Download</button>
+                    </div>
+                    <div class="export-card">
+                        <h3>setup.sql</h3>
+                        <button id="btn-export-sql" class="btn btn-secondary">Download</button>
+                    </div>
+                    <div class="export-card">
+                        <h3>data.sql</h3>
+                        <button id="btn-export-data" class="btn btn-secondary">Download</button>
+                    </div>
+                </div>
+            </details>
         </section>
 
         <!-- Navigation -->
@@ -188,6 +244,8 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
     <script type="module" src="js/wizard-main.js"></script>
 </body>
 
