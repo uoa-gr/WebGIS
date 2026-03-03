@@ -28,16 +28,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Inject webgis.config.json from secret
-        run: |
-          cat > app/webgis.config.json << 'CONFIGEOF'
-          ${{ secrets.WEBGIS_CONFIG }}
-          CONFIGEOF
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './app'
+          path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment

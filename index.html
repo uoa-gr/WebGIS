@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS — Build Interactive Map Sites</title>
+    <meta name="description" content="A config-driven platform for building interactive WebGIS sites. Upload a CSV, walk through the wizard, deploy a full-featured geographic database viewer.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="landing.css">
+</head>
+
+<body>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>WebGIS</h1>
+            <p class="tagline">Build interactive geographic database sites — no coding required.</p>
+            <p class="subtitle">Upload a CSV, configure with the wizard, deploy to GitHub Pages with Supabase.</p>
+            <div class="hero-actions">
+                <a href="wizard/" class="btn btn-primary">Open Setup Wizard</a>
+                <a href="#how-it-works" class="btn btn-secondary">How It Works</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="section">
+        <h2>How It Works</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Upload CSV</h3>
+                <p>Drag and drop your geographic dataset. The wizard detects columns automatically.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Configure</h3>
+                <p>Set column types, choose filters, pick tooltip and modal fields, style the map.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Export</h3>
+                <p>The wizard generates a config file and SQL scripts ready for Supabase.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Deploy</h3>
+                <p>Run the SQL in Supabase, drop the app folder into a repo, enable GitHub Pages. Done.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section section-alt">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <h3>Config-Driven</h3>
+                <p>A single JSON file controls filters, tooltips, modals, statistics, map style — everything.</p>
+            </div>
+            <div class="feature">
+                <h3>Interactive Map</h3>
+                <p>Leaflet-powered with marker clustering, measurement tools, and multiple base layers.</p>
+            </div>
+            <div class="feature">
+                <h3>Sidebar Filters</h3>
+                <p>Dynamic dropdowns generated from your data. Filter combinations update the map in real time.</p>
+            </div>
+            <div class="feature">
+                <h3>Global Search</h3>
+                <p>Full-text search across configurable columns with instant results.</p>
+            </div>
+            <div class="feature">
+                <h3>Query Builder</h3>
+                <p>Advanced filtering with custom conditions — no SQL knowledge needed for end users.</p>
+            </div>
+            <div class="feature">
+                <h3>Zero Build Step</h3>
+                <p>Pure HTML, CSS, and ES6 modules. No bundler, no framework, no dependencies to install.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What You Get -->
+    <section class="section">
+        <h2>What You Get</h2>
+        <div class="output-grid">
+            <div class="output-card">
+                <h3>webgis.config.json</h3>
+                <p>Your entire site configuration: project info, Supabase credentials, column definitions, filters, display settings, map options.</p>
+            </div>
+            <div class="output-card">
+                <h3>setup.sql</h3>
+                <p>Creates the database table, indexes, and row-level security policies in Supabase.</p>
+            </div>
+            <div class="output-card">
+                <h3>data.sql</h3>
+                <p>INSERT statements for all rows in your CSV, ready to run in the Supabase SQL Editor.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="section section-alt">
+        <h2>Tech Stack</h2>
+        <div class="tech-grid">
+            <div class="tech">Leaflet 1.9</div>
+            <div class="tech">Supabase</div>
+            <div class="tech">Vanilla ES6</div>
+            <div class="tech">GitHub Pages</div>
+            <div class="tech">MarkerCluster</div>
+            <div class="tech">No Build Step</div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta">
+        <h2>Ready to start?</h2>
+        <p>Open the wizard, upload your CSV, and have a live WebGIS site in minutes.</p>
+        <div class="hero-actions">
+            <a href="wizard/" class="btn btn-primary">Open Setup Wizard</a>
+            <a href="https://github.com/uoa-gr/WebGIS" class="btn btn-secondary" target="_blank" rel="noopener">View on GitHub</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>WebGIS — University of Athens</p>
+    </footer>
+
+</body>
+
+</html>
